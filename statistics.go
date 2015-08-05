@@ -18,7 +18,6 @@ const (
             <title>Statistics</title>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>.error{color:#FF0000;}</style>
             <!-- Latest compiled and minified CSS -->
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
             <!-- Latest compiled and minified JavaScript -->
@@ -41,7 +40,7 @@ const (
             </div>
         </body>
         </html>`
-    anError = `<p class="error">%s</p>`
+    anError = `<br /><p class="text-danger">%s</p>`
 )
 
 // Struct holding the user's numbers and the resulting statistics
