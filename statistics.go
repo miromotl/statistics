@@ -7,6 +7,7 @@ import (
     "sort"
     "strconv"
     "strings"
+    "math"
 )
 
 // Constants with html code for our web page
@@ -48,6 +49,7 @@ type statistics struct {
     numbers []float64
     mean    float64
     median  float64
+    σ  float64
 }
 
 func main() {
@@ -115,6 +117,7 @@ func getStats(numbers []float64) (stats statistics) {
     sort.Float64s(stats.numbers)
     stats.mean = sum(numbers) / float64(len(numbers))
     stats.median = median(stats.numbers)
+    stats.σ = σ(stats.numbers)
     
     return stats
 }
@@ -141,6 +144,27 @@ func median(numbers []float64) float64 {
     return result
 }
 
+// Calculate the standard deviation of float64 numbers
+func σ(numbers []float64) (σ float64) {
+    
+    n := len(numbers)
+    
+    if n < 2 {
+        return σ
+    }
+    
+    mean := sum(numbers) / float64(n)
+    var s float64
+    
+    for _, x := range numbers {
+        s += (x - mean) * (x - mean)
+    }
+    
+    σ = math.Sqrt(s/float64(n-1))
+    
+    return σ
+}
+
 // Format the statistics html output
 func formatStats(stats statistics) string {
     return fmt.Sprintf(`
@@ -154,8 +178,9 @@ func formatStats(stats statistics) string {
                     <tr><td>Count</td><td>%d</td></tr>
                     <tr><td>Mean</td><td>%f</td></tr>
                     <tr><td>Median</td><td>%f</td></tr>
+                    <tr><td>σ</td><td>%f</td></tr>
                 </tbody>
             </table>
         </div>`,
-        stats.numbers, len(stats.numbers), stats.mean, stats.median)
+        stats.numbers, len(stats.numbers), stats.mean, stats.median, stats.σ)
 }
