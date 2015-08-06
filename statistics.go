@@ -49,7 +49,8 @@ type statistics struct {
     numbers []float64
     mean    float64
     median  float64
-    σ  float64
+    mode    []float64
+    σ       float64
 }
 
 func main() {
@@ -117,6 +118,7 @@ func getStats(numbers []float64) (stats statistics) {
     sort.Float64s(stats.numbers)
     stats.mean = sum(numbers) / float64(len(numbers))
     stats.median = median(stats.numbers)
+    stats.mode = mode(stats.numbers)
     stats.σ = σ(stats.numbers)
     
     return stats
@@ -142,6 +144,37 @@ func median(numbers []float64) float64 {
     }
     
     return result
+}
+
+// Calculate the mode of float64 numbers
+func mode(numbers []float64) (mode []float64) {
+    // count the occurrences of the numbers
+    occurrences := make(map[float64]int)
+    
+    for _, x := range numbers {
+        counter := occurrences[x]
+        occurrences[x] = counter + 1
+    }
+    
+    // collect the numbers with maximum occurrences
+    max := 0
+
+    for x, counter := range occurrences {
+        if counter > max {
+            max = counter
+            mode = nil
+            mode = append(mode, x)
+        } else if counter == max {
+            mode = append(mode, x)
+        }
+    }
+    
+    // if all numbers have equal count, then return nil
+    if len(mode) == len(occurrences) {
+        mode = nil
+    }
+
+    return mode
 }
 
 // Calculate the standard deviation of float64 numbers
@@ -178,9 +211,11 @@ func formatStats(stats statistics) string {
                     <tr><td>Count</td><td>%d</td></tr>
                     <tr><td>Mean</td><td>%f</td></tr>
                     <tr><td>Median</td><td>%f</td></tr>
+                    <tr><td>Mode</td><td>%v</td></tr>
                     <tr><td>σ</td><td>%f</td></tr>
                 </tbody>
             </table>
         </div>`,
-        stats.numbers, len(stats.numbers), stats.mean, stats.median, stats.σ)
+        stats.numbers, len(stats.numbers), 
+        stats.mean, stats.median, stats.mode, stats.σ)
 }
